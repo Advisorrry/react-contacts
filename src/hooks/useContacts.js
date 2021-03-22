@@ -10,7 +10,7 @@ export const useContacts = () => {
         const getContacts = async () => {
             setIsLoading(true)
             try {
-                const response = await axios.get('https://randomuser.me/api/?results=15')
+                const response = await axios.get('https://randomuser.me/api/?results=30')
                 const { results, error } = await response.data
                 if (error) {
                     throw new Error(error)
