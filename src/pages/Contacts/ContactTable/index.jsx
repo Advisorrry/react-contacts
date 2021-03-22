@@ -11,12 +11,10 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
+import { CopyToClickBoardText } from '../../../components/copyToClickBoardText'
 
 const useStyles = makeStyles({
     table: {},
-    phoneWidth: {
-        minWidth: '25px',
-    },
 })
 
 export const ContactTable = ({ data }) => {
@@ -42,7 +40,7 @@ export const ContactTable = ({ data }) => {
                             <TableCell component="th" scope="row">
                                 <Avatar alt={item.name.first} src={item.picture.thumbnail} />
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell>
                                 {item.name.title} {item.name.first} {item.name.last}
                             </TableCell>
                             <TableCell>
@@ -52,10 +50,18 @@ export const ContactTable = ({ data }) => {
 
                                 <Typography>{item.dob.age} years</Typography>
                             </TableCell>
-                            <TableCell>{item.email}</TableCell>
-                            <TableCell className={classes.phoneWidth}>{item.phone}</TableCell>
                             <TableCell>
-                                {item.location.city}, {item.location.country}
+                                <CopyToClickBoardText text={item.email} />
+                            </TableCell>
+                            <TableCell className={classes.phoneWidth}>
+                                <CopyToClickBoardText text={item.phone} />
+                            </TableCell>
+                            <TableCell>
+                                <Typography>{'/'}{item.location.country}{'/'}</Typography>
+                                <Typography>
+                                    {item.location.city}, {item.location.street.name}{' '}
+                                    {item.location.street.number}{' '}
+                                </Typography>
                             </TableCell>
                             <TableCell>{item.nat}</TableCell>
                         </TableRow>
