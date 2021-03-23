@@ -11,6 +11,7 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
+
 import { CopyToClickBoardText } from '../../../components/copyToClickBoardText'
 import { FULL_NATIONALITIES_NAMES } from '../../../constants/nationality'
 
@@ -58,7 +59,11 @@ export const ContactTable = ({ data }) => {
                                 <CopyToClickBoardText text={item.phone} />
                             </TableCell>
                             <TableCell>
-                                <Typography>{'/'}{item.location.country}{'/'}</Typography>
+                                <Typography>
+                                    {'/'}
+                                    {item.location.country}
+                                    {'/'}
+                                </Typography>
                                 <Typography>
                                     {item.location.city}, {item.location.street.name}{' '}
                                     {item.location.street.number}{' '}
