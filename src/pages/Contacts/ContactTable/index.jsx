@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import { CopyToClickBoardText } from '../../../components/copyToClickBoardText'
+import { FULL_NATIONALITIES_NAMES } from '../../../constants/nationality'
 
 const useStyles = makeStyles({
     table: {},
@@ -63,7 +64,7 @@ export const ContactTable = ({ data }) => {
                                     {item.location.street.number}{' '}
                                 </Typography>
                             </TableCell>
-                            <TableCell>{item.nat}</TableCell>
+                            <TableCell>{FULL_NATIONALITIES_NAMES[item.nat]}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

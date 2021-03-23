@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from '@material-ui/core'
+import { CircularProgress, Container, Grid, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useContacts } from '../../hooks/useContacts'
 
@@ -30,7 +30,7 @@ export const Contacts = () => {
                 <Grid item xs={12}>
                     {(() => {
                         if (contacts.isLoading) {
-                            return <div>...loading</div>
+                            return <CircularProgress color="secondary" />
                         }
                         if (contacts.isError) {
                             return <div>...error</div>
