@@ -5,9 +5,10 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 import { useContacts } from '../../hooks/useContacts'
 import { ContactTable } from './ContactTable'
-import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab'
-import ViewListIcon from '@material-ui/icons/ViewList'
-import ViewModuleIcon from '@material-ui/icons/ViewModule'
+import { ToggleViewMode } from '../../components/ToggleViewMode'
+import { DATA_VIEW_MODES } from '../../constants/data_view_modes'
+import { useViewMode } from '../../hooks/useViewMode'
+
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -19,28 +20,21 @@ const useStyles = makeStyles((theme) =>
         },
     }),
 )
-const DATA_VIEW_MODES = {
-    TABLE: 'table',
-    GRID: 'grid',
-}
 
-const getInitialDataViewMode = () => {
-    return localStorage.getItem('viewMode') || DATA_VIEW_MODES.TABLE
-}
+
+
 
 export const Contacts = () => {
     const classes = useStyles()
     const contacts = useContacts()
 
-    const [viewMode, setViewMode] = React.useState(getInitialDataViewMode)
-
-    const handleChangeViewMode = (_, nextview) => {
-        setViewMode(nextview)
-    }
+    const [viewMode, setViewMode] = useViewMode()
 
     React.useEffect(() => {
         localStorage.setItem('viewMode', viewMode)
     }, [viewMode])
+
+    
     return (
         <Container className={classes.root}>
             <Grid container spacing={3}>
@@ -49,22 +43,7 @@ export const Contacts = () => {
                         <Typography variant="h4" component="h1">
                             Contacts
                         </Typography>
-                        <ToggleButtonGroup
-                            orientation="horizontal"
-                            onChange={handleChangeViewMode}
-                            value={viewMode}
-                            exclusive>
-                            <ToggleButton
-                                value={DATA_VIEW_MODES.GRID}
-                                aria-label={DATA_VIEW_MODES.GRID}>
-                                <ViewModuleIcon />
-                            </ToggleButton>
-                            <ToggleButton
-                                value={DATA_VIEW_MODES.TABLE}
-                                aria-label={DATA_VIEW_MODES.TABLE}>
-                                <ViewListIcon />
-                            </ToggleButton>
-                        </ToggleButtonGroup>
+                    <ToggleViewMode viewMode={viewMode} setViewMode={setViewMode} />
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
