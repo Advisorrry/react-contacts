@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) =>
         fieldsContainer: {
             '& > *:not(:last-child)': {
                 marginRight: theme.spacing(4),
-            }
+            },
         },
         filtersContainer: {},
         formControl: {
@@ -34,49 +34,62 @@ const useStyles = makeStyles((theme) =>
     }),
 )
 
-export const ContactsFilters = ({ filters, updateFilters, clearFilters }) => {
+const FieldGender = React.memo(({ value, onChange }) => {
     const classes = useStyles()
-    const handleChangeFilter = (e) => {
-        updateFilters(e.target.name, e.target.value)
-    }
+    return (
+        <FormControl size="small" variant="outlined" className={classes.formControl}>
+            <Select onChange={onChange} labelId="gender" name="gender" value={value}>
+                <MenuItem value={'all'}>All</MenuItem>
+                <MenuItem value={'male'}>Male</MenuItem>
+                <MenuItem value={'female'}>Female</MenuItem>
+            </Select>
+        </FormControl>
+    )
+})
+const FieldNationality = React.memo(({ value, onChange }) => {
+    const classes = useStyles()
+    return (
+        <FormControl size="small" variant="outlined" className={classes.formControl}>
+            <Select onChange={onChange} labelId="nationality" name="nationality" value={value}>
+                <MenuItem value={'all'}>All</MenuItem>
+                {Object.entries(FULL_NATIONALITIES_NAMES).map(([key, name]) => (
+                    <MenuItem key={key} value={key}>
+                        {name}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+    )
+})
+const FieldFullname = React.memo(({ value, onChange }) => {
+    return (
+        <TextField
+            label="Search by full name"
+            size="small"
+            variant="outlined"
+            name="fullname"
+            value={value}
+            onChange={onChange}
+        />
+    )
+})
+
+export const ContactsFilters = React.memo(({ filters, updateFilters, clearFilters }) => {
+    const classes = useStyles()
+    const handleChangeFilter = React.useCallback(
+        (e) => {
+            updateFilters(e.target.name, e.target.value)
+        },
+        [updateFilters],
+    )
 
     return (
         <Grid item xs={12} className={classes.filtersContainer}>
-            <Box display="flex" justifyContent='space-between' >
-            <Box display="flex" className={classes.fieldsContainer}>
-                <TextField
-                    label="Search by full name"
-                    size="small"
-                    variant="outlined"
-                    name="fullname"
-                    value={filters.fullname}
-                    onChange={handleChangeFilter}
-                />
-                <FormControl size="small" variant="outlined" className={classes.formControl}>
-                    <Select
-                        onChange={handleChangeFilter}
-                        labelId="gender"
-                        name="gender"
-                        value={filters.gender}>
-                        <MenuItem value={'all'}>All</MenuItem>
-                        <MenuItem value={'male'}>Male</MenuItem>
-                        <MenuItem value={'female'}>Female</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl size="small" variant="outlined" className={classes.formControl}>
-                    <Select
-                        onChange={handleChangeFilter}
-                        labelId="nationality"
-                        name="nationality"
-                        value={filters.nationality}>
-                        <MenuItem value={'all'}>All</MenuItem>
-                        {Object.entries(FULL_NATIONALITIES_NAMES).map(([key, name]) => (
-                            <MenuItem key={key} value={key}>
-                                {name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+            <Box display="flex" justifyContent="space-between">
+                <Box display="flex" className={classes.fieldsContainer}>
+                    <FieldFullname value={filters.fullname} onChange={handleChangeFilter} />
+                    <FieldGender value={filters.gender} onChange={handleChangeFilter} />
+                    <FieldNationality value={filters.nationality} onChange={handleChangeFilter} />
                 </Box>
                 <Button
                     variant="outlined"
@@ -90,7 +103,7 @@ export const ContactsFilters = ({ filters, updateFilters, clearFilters }) => {
             </Box>
         </Grid>
     )
-}
+})
 
 ContactsFilters.propTypes = {
     filters: PropTypes.object.isRequired,
