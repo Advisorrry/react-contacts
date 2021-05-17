@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography'
 
 import { CopyToClickBoardText } from '../../../components/copyToClickBoardText'
 import { FULL_NATIONALITIES_NAMES } from '../../../constants/nationality'
+import { ContactsTableHead } from '../../../components/ContactsTableHead'
 
 const useStyles = makeStyles({
     table: {},
@@ -25,17 +26,7 @@ export const ContactTable = ({ data }) => {
     return (
         <TableContainer component={Paper}>
             <Table className={classes.table} size="small" aria-label="cantacts table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Avatar</TableCell>
-                        <TableCell>Full name</TableCell>
-                        <TableCell>Birthday</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Phone</TableCell>
-                        <TableCell>Location</TableCell>
-                        <TableCell>Nationality</TableCell>
-                    </TableRow>
-                </TableHead>
+                <ContactsTableHead />
                 <TableBody>
                     {data.map((item) => (
                         <TableRow key={item.login.uuid}>
