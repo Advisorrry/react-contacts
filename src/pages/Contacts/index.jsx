@@ -1,14 +1,14 @@
 import React from 'react'
 
-import { Box, CircularProgress, Container, Grid, Typography } from '@material-ui/core'
+import { CircularProgress, Container, Grid } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 import { useContacts } from '../../hooks/useContacts'
 import { ContactTable } from './ContactTable'
-import { ToggleViewMode } from '../../components/ToggleViewMode'
 import { DATA_VIEW_MODES } from '../../constants/data_view_modes'
 import { useViewMode } from '../../hooks/useViewMode'
 import { ContactsFilters } from '../ContactsFilters'
+import { Header } from '../../components/Header'
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -26,6 +26,20 @@ const filtersDefaultValue = {
     gender: 'all',
     nationality: 'all',
 }
+const filterByFullname = ({ first, last }, fullname) => {
+    return (
+        first?.toLowerCase().includes(fullname.toLowerCase()) ||
+        last?.toLowerCase().includes(fullname.toLowerCase())
+    )
+}
+const filterByGender = (gender, filterGender) => {
+    if (filterGender === 'all') return true
+    return gender === filterGender
+}
+const filterByNationality = (nationality, filterNationality) => {
+    if (filterNationality === 'all') return true
+    return nationality === filterNationality
+}
 
 export const Contacts = () => {
     const classes = useStyles()
@@ -39,30 +53,16 @@ export const Contacts = () => {
         localStorage.setItem('viewMode', viewMode)
     }, [viewMode])
 
-    const updateFilters = (name, value) => {
+    const updateFilters = React.useCallback((name, value) => {
         setFilters((prevFilter) => ({
             ...prevFilter,
             [name]: value,
         }))
-    }
+    }, [])
 
-    const filterByFullname = ({ first, last }, fullname) => {
-        return (
-            first?.toLowerCase().includes(fullname.toLowerCase()) ||
-            last?.toLowerCase().includes(fullname.toLowerCase())
-        )
-    }
-    const filterByGender = (gender, filterGender) => {
-        if (filterGender === 'all') return true
-        return gender === filterGender
-    }
-    const filterByNationality = (nationality, filterNationality) => {
-        if (filterNationality === 'all') return true
-        return nationality === filterNationality
-    }
-    const clearFilters = () => {
+    const clearFilters = React.useCallback(() => {
         setFilters(filtersDefaultValue)
-    }
+    }, [])
 
     const filteredContacts = contacts.data
         .filter((c) => filterByFullname(c.name, filters.fullname))
@@ -72,15 +72,12 @@ export const Contacts = () => {
     return (
         <Container className={classes.root}>
             <Grid container spacing={3}>
-                <Grid item xs={12} className={classes.headContainer}>
-                    <Box display="flex" justifyContent="space-between">
-                        <Typography variant="h4" component="h1">
-                            Contacts
-                        </Typography>
-                        <ToggleViewMode viewMode={viewMode} setViewMode={setViewMode} />
-                    </Box>
-                </Grid>
-                <ContactsFilters filters={filters} updateFilters={updateFilters} clearFilters={clearFilters} />
+                <Header viewMode={viewMode} setViewMode={setViewMode} />
+                <ContactsFilters
+                    filters={filters}
+                    updateFilters={updateFilters}
+                    clearFilters={clearFilters}
+                />
                 <Grid item xs={12}>
                     {(() => {
                         if (contacts.isLoading) {
